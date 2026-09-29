@@ -8,10 +8,19 @@ def emotion_detector(text_to_analyze):
     
     response = requests.post(url, json=myobj, headers=headers)
     
-    # تحويل النص المستلم إلى قاموس JSON
+    # معالجة الخطأ 400 للمدخلات الفارغة
+    if response.status_code == 400:
+        return {
+            'anger': None,
+            'disgust': None,
+            'fear': None,
+            'joy': None,
+            'sadness': None,
+            'dominant_emotion': None
+        }
+
     formatted_response = json.loads(response.text)
     
-    # استخراج درجات المشاعر
     emotions = formatted_response['emotionPredictions'][0]['emotion']
     anger_score = emotions['anger']
     disgust_score = emotions['disgust']
@@ -19,7 +28,6 @@ def emotion_detector(text_to_analyze):
     joy_score = emotions['joy']
     sadness_score = emotions['sadness']
     
-    # استخراج المشاعر المطلوبة وتحديد العاطفة السائدة
     emotion_scores = {
         'anger': anger_score,
         'disgust': disgust_score,

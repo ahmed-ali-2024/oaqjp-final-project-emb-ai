@@ -13,17 +13,22 @@ def emo_detector():
     """
     Analyzes the text passed via GET parameter 'textToAnalyze'
     and returns a formatted string containing emotion scores
-    and dominant emotion.
+    and dominant emotion, or an error message if invalid.
     """
     text_to_analyze = request.args.get('textToAnalyze')
     response = emotion_detector(text_to_analyze)
+
+    dominant_emotion = response['dominant_emotion']
+
+    # معالجة الحالة التي يكون فيها dominant_emotion يساوي None
+    if dominant_emotion is None:
+        return "Invalid text! Please try again!"
 
     anger = response['anger']
     disgust = response['disgust']
     fear = response['fear']
     joy = response['joy']
     sadness = response['sadness']
-    dominant_emotion = response['dominant_emotion']
 
     return (
         f"For the given statement, the system response is "
